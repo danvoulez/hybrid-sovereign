@@ -210,6 +210,27 @@ fn one_sovereign_case() {
         }
         other => panic!("expected WorkerCompleted, got {other:?}"),
     }
+    assert!(session.transcript[0]
+        .action_canonical
+        .contains("compute|run_worker"));
+    assert_eq!(session.transcript[0].budget_before, 40);
+    assert!(session.transcript[0].budget_after <= session.transcript[0].budget_before);
+    assert_eq!(
+        session.transcript[0].state_root_before,
+        Cid::from("cid:state:root:one")
+    );
+    assert_ne!(
+        session.transcript[0].state_root_before,
+        session.transcript[0].state_root_after
+    );
+    assert_eq!(
+        session.transcript[1].state_root_before,
+        session.transcript[0].state_root_after
+    );
+    assert_ne!(
+        session.transcript[1].state_root_after,
+        session.transcript[0].state_root_after
+    );
 
     assert_eq!(
         atom_space.current_heat(&Cid::from("cid:atom:required:one")),
