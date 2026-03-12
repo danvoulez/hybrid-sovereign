@@ -2,8 +2,8 @@ use epistemic_storage::{
     AtomBody, AtomHeader, AtomKind, AtomSpace, EpistemicHeat, InMemoryAtomSpace, UniversalAtom,
 };
 use proof_runtime::{
-    run, ComputeAction, Contract, DeterminismProfile, Session, SovereignRuntime, StepAction,
-    StepDecision,
+    run, ComputeAction, Contract, DeterminismProfile, ExecutionTarget, ProofMode, Session,
+    SovereignRuntime, StepAction, StepDecision,
 };
 use sovereign_core::{hash_canonical, CaseId, Cid, Hash, ReceiptCid, Signature};
 use worker_abi::{WorkerAbi, WorkerError, WorkerHostEnv, WorkerResult, WorkerYield};
@@ -92,7 +92,7 @@ impl Contract for DocumentContract {
             allow_user_input: false,
             allow_time_oracle: false,
             allow_external_fetch: false,
-            abi_version: 1,
+            execution_target: ExecutionTarget::Wasm { abi_version: 1 },
         }
     }
 }
@@ -216,6 +216,7 @@ pub fn execute_document_case(case_id: &CaseId) -> Result<DomainExecution, String
         initial_budget: 64,
         budget_remaining: 64,
         state_root: Cid::from("cid:state:document-intake"),
+        proof_mode: ProofMode::AnchoredImmutableRefs,
         transcript: vec![],
         final_receipt_cid: None,
         final_proof_pack_cid: None,

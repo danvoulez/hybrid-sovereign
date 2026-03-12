@@ -10,8 +10,8 @@ use proof_federation::{
     PointerValidator,
 };
 use proof_runtime::{
-    run, ComputeAction, Contract, DeterminismProfile, FinalOutcome, Session, SovereignRuntime,
-    StepAction, StepDecision, StepReceipt,
+    run, ComputeAction, Contract, DeterminismProfile, ExecutionTarget, FinalOutcome, ProofMode,
+    Session, SovereignRuntime, StepAction, StepDecision, StepReceipt,
 };
 use sovereign_core::{
     hash_canonical, BudgetAmount, CaseId, Cid, Hash, NodeId, PointerAlias, Signature,
@@ -46,7 +46,7 @@ impl Contract for OneCaseContract {
             allow_user_input: false,
             allow_time_oracle: false,
             allow_external_fetch: false,
-            abi_version: 1,
+            execution_target: ExecutionTarget::Wasm { abi_version: 1 },
         }
     }
 }
@@ -147,6 +147,7 @@ fn run_case_once() -> (proof_runtime::ProofPack, Session, InMemoryAtomSpace) {
         initial_budget: 40,
         budget_remaining: 40,
         state_root: Cid::from("cid:state:root:one"),
+        proof_mode: ProofMode::AnchoredImmutableRefs,
         transcript: vec![],
         final_receipt_cid: None,
         final_proof_pack_cid: None,
@@ -176,7 +177,17 @@ fn run_case_once() -> (proof_runtime::ProofPack, Session, InMemoryAtomSpace) {
 fn one_sovereign_case() {
     let (proof, session, atom_space) = run_case_once();
 
-    assert_eq!(proof.final_outcome, FinalOutcome::Commit);
+    assert!(matches!(
+        &proof.final_outcome,
+        FinalOutcome::Commit { output_cid } if *output_cid
+            == Cid::new(
+                proof
+                    .final_receipt_cid
+                    .as_ref()
+                    .expect("final receipt must exist for commit")
+                    .as_str()
+            )
+    ));
     assert!(proof.final_receipt_cid.is_some());
     assert_eq!(proof.event_count, 2);
     assert_eq!(session.transcript.len(), 2);

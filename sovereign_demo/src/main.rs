@@ -7,8 +7,8 @@ use proof_federation::{
     BasicPointerValidator, FederationView, PointerClass, PointerPolicy, PointerValidator,
 };
 use proof_runtime::{
-    run, ComputeAction, Contract, DeterminismProfile, Session, SovereignRuntime, StepAction,
-    StepDecision,
+    run, ComputeAction, Contract, DeterminismProfile, ExecutionTarget, ProofMode, Session,
+    SovereignRuntime, StepAction, StepDecision,
 };
 use sovereign_core::{
     hash_canonical, BudgetAmount, CaseId, Cid, Hash, NodeId, PointerAlias, Signature,
@@ -45,7 +45,7 @@ impl Contract for DemoContract {
             allow_user_input: false,
             allow_time_oracle: false,
             allow_external_fetch: false,
-            abi_version: 1,
+            execution_target: ExecutionTarget::Wasm { abi_version: 1 },
         }
     }
 }
@@ -227,6 +227,7 @@ fn main() {
         initial_budget: 60,
         budget_remaining: 60,
         state_root: Cid::from("cid:state:root:001"),
+        proof_mode: ProofMode::AnchoredImmutableRefs,
         transcript: vec![],
         final_receipt_cid: None,
         final_proof_pack_cid: None,
