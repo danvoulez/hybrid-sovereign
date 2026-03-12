@@ -1,0 +1,17 @@
+[package]
+name = "sovereign_manager_app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+epistemic_storage = { path = "../../epistemic_storage" }
+manager_plane = { path = "../../manager_plane" }
+proof_federation = { path = "../../proof_federation" }
+proof_runtime = { path = "../../proof_runtime" }
+sovereign_core = { path = "../../sovereign_core" }
+worker_abi = { path = "../../worker_abi" }
+
+[[bin]]
+name = "sovereign_manager_app"
+path = "src/main.rs"

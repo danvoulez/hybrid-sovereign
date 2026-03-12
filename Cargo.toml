@@ -1,0 +1,19 @@
+[workspace]
+members = [
+  "apps/sovereign_manager_app",
+  "sovereign_core",
+  "frugal_decision",
+  "proof_runtime",
+  "epistemic_storage",
+  "proof_federation",
+  "manager_plane",
+  "worker_abi",
+  "sovereign_demo",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+version = "0.1.0"
+authors = ["OpenAI"]

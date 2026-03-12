@@ -1,0 +1,13 @@
+[package]
+name = "proof_federation"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+epistemic_storage = { path = "../epistemic_storage" }
+proof_runtime = { path = "../proof_runtime" }
+sovereign_core = { path = "../sovereign_core" }
+
+[lib]
+path = "src/lib.rs"
